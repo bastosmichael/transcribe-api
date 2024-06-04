@@ -17,7 +17,6 @@ from io import BytesIO
 
 
 class TestTranscriptionService(unittest.TestCase):
-
     @patch("transcribe.services.boto3.client")
     def test_upload_to_s3(self, mock_boto_client):
         mock_s3 = MagicMock()
