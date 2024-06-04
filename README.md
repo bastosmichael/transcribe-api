@@ -2,6 +2,9 @@
 
 Transcribe API is a high-performance FastAPI backend application designed to provide a robust and scalable backend solution for AWS Transcription. It uses an OpenAPI spec and Swagger utilizing JSON Schema to ensure easy integration and high performance.
 
+![Screenshot 2024-06-03 at 2 35 57 PM](https://github.com/bastosmichael/transcribe-api/assets/1518708/3894219c-2013-4f3e-a421-1ea7e19e4afc)
+
+
 ## Features
 
 - **FastAPI Backend**: Offers a high-performance backend solution that incorporates a modern, fast (high-performance) web framework for building APIs with Python 3.6+ based on standard Python type hints.
