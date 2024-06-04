@@ -3,14 +3,14 @@ import time
 import json
 import os
 from fastapi import UploadFile
-from transcribe.config import get_config
+from transcribe.config import config
 import logging
 
-config = get_config()
+config = config()
 logger = logging.getLogger(__name__)
 
 
-def get_s3_client():
+def s3_client():
     return boto3.client(
         "s3",
         aws_access_key_id=config.aws_access_key_id,
@@ -20,7 +20,7 @@ def get_s3_client():
     )
 
 
-def get_transcribe_client():
+def transcribe_client():
     return boto3.client(
         "transcribe",
         aws_access_key_id=config.aws_access_key_id,
@@ -31,14 +31,14 @@ def get_transcribe_client():
 
 
 def upload_to_s3(local_file_path, bucket_name, s3_file_name):
-    s3 = get_s3_client()
+    s3 = s3_client()
     s3.upload_file(local_file_path, bucket_name, s3_file_name)
     s3_file_uri = f"s3://{bucket_name}/{s3_file_name}"
     return s3_file_uri
 
 
 def start_transcription_job(s3_file_uri, job_name, language_code="en-US"):
-    transcribe = get_transcribe_client()
+    transcribe = transcribe_client()
     response = transcribe.start_transcription_job(
         TranscriptionJobName=job_name,
         Media={"MediaFileUri": s3_file_uri},
@@ -50,17 +50,17 @@ def start_transcription_job(s3_file_uri, job_name, language_code="en-US"):
     return response
 
 
-def get_transcription_status(job_name):
-    transcribe = get_transcribe_client()
-    status = transcribe.get_transcription_job(TranscriptionJobName=job_name)
+def transcription_status(job_name):
+    transcribe = transcribe_client()
+    status = transcribe.transcription_job(TranscriptionJobName=job_name)
     return status
 
 
-def fetch_transcription_result(job_name):
-    status = get_transcription_status(job_name)
+def transcription_result(job_name):
+    status = transcription_status(job_name)
     if status["TranscriptionJob"]["TranscriptionJobStatus"] == "COMPLETED":
-        s3 = get_s3_client()
-        transcription_response = s3.get_object(
+        s3 = s3_client()
+        transcription_response = s3.object(
             Bucket=config.s3_bucket_name,
             Key=f"{job_name}.json",
         )
@@ -73,7 +73,7 @@ def fetch_transcription_result(job_name):
     return {"status": status["TranscriptionJob"]["TranscriptionJobStatus"]}
 
 
-async def handle_transcription_upload(file: UploadFile):
+async def transcription_upload(file: UploadFile):
     file_location = f"/tmp/{file.filename}"
     with open(file_location, "wb+") as file_object:
         file_object.write(file.file.read())
@@ -97,18 +97,18 @@ async def handle_transcription_upload(file: UploadFile):
     return {"job_name": job_name}
 
 
-async def handle_transcription_status(job_name: str):
+async def transcription_status(job_name: str):
     try:
-        status = get_transcription_status(job_name)
+        status = transcription_status(job_name)
         return {"status": status["TranscriptionJob"]["TranscriptionJobStatus"]}
     except Exception as e:
         logger.error(f"Error fetching transcription job status: {e}")
         raise
 
 
-async def handle_transcription_fetch(job_name: str):
+async def transcription_fetch(job_name: str):
     try:
-        result = fetch_transcription_result(job_name)
+        result = transcription_result(job_name)
         return result
     except Exception as e:
         logger.error(f"Error fetching transcription result: {e}")

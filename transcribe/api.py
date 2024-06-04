@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import RedirectResponse
 from transcribe.services import (
-    handle_transcription_upload,
-    handle_transcription_status,
-    handle_transcription_fetch,
+    transcription_upload,
+    transcription_status,
+    transcription_fetch,
 )
 
 router = APIRouter()
@@ -22,7 +22,7 @@ async def root():
 )
 async def transcribe_upload(file: UploadFile):
     try:
-        response = await handle_transcription_upload(file)
+        response = await transcription_upload(file)
         return response
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -36,7 +36,7 @@ async def transcribe_upload(file: UploadFile):
 )
 async def transcribe_status(job_name: str):
     try:
-        response = await handle_transcription_status(job_name)
+        response = await transcription_status(job_name)
         return response
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -50,7 +50,7 @@ async def transcribe_status(job_name: str):
 )
 async def transcribe_fetch(job_name: str):
     try:
-        response = await handle_transcription_fetch(job_name)
+        response = await transcription_fetch(job_name)
         return response
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
