@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import RedirectResponse
-from transcribe.transcription import (
+from transcribe.services import (
     handle_transcription_upload,
     handle_transcription_status,
     handle_transcription_fetch,

@@ -3,7 +3,7 @@ import time
 import json
 import os
 from fastapi import UploadFile
-from transcribe.settings import get_settings
+from transcribe.config import get_settings
 import logging
 
 settings = get_settings()

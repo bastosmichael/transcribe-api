@@ -1,4 +1,4 @@
-from transcribe.settings import Settings, get_settings
+from transcribe.config import Settings, get_settings
 
 
 def test_get_settings():
