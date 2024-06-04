@@ -2,7 +2,7 @@ from functools import lru_cache
 from pydantic import BaseSettings
 
 
-class Settings(BaseSettings):
+class Config(BaseSettings):
     aws_access_key_id: str
     aws_secret_access_key: str
     aws_session_token: str = None
@@ -14,5 +14,5 @@ class Settings(BaseSettings):
 
 
 @lru_cache()
-def get_settings():
-    return Settings()
+def get_config():
+    return Config()

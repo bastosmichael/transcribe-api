@@ -2,10 +2,10 @@ import sys
 import logging
 from fastapi import FastAPI, Depends
 from transcribe.api import router
-from transcribe.config import get_settings
+from transcribe.config import get_config
 import argparse
 
-app = FastAPI(title="TranscribeAPI", dependencies=[Depends(get_settings)])
+app = FastAPI(title="TranscribeAPI", dependencies=[Depends(get_config)])
 
 # Include routers
 app.include_router(router)

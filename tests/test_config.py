@@ -1,11 +1,11 @@
-from transcribe.config import Settings, get_settings
+from transcribe.config import Config, get_config
 
 
-def test_get_settings():
-    settings = get_settings()
-    assert isinstance(settings, Settings)
-    assert hasattr(settings, "aws_access_key_id")
-    assert hasattr(settings, "aws_secret_access_key")
-    assert hasattr(settings, "aws_session_token")
-    assert hasattr(settings, "s3_bucket_name")
-    assert hasattr(settings, "region")
+def test_get_config():
+    config = get_config()
+    assert isinstance(config, Config)
+    assert hasattr(config, "aws_access_key_id")
+    assert hasattr(config, "aws_secret_access_key")
+    assert hasattr(config, "aws_session_token")
+    assert hasattr(config, "s3_bucket_name")
+    assert hasattr(config, "region")

@@ -3,30 +3,30 @@ import time
 import json
 import os
 from fastapi import UploadFile
-from transcribe.config import get_settings
+from transcribe.config import get_config
 import logging
 
-settings = get_settings()
+config = get_config()
 logger = logging.getLogger(__name__)
 
 
 def get_s3_client():
     return boto3.client(
         "s3",
-        aws_access_key_id=settings.aws_access_key_id,
-        aws_secret_access_key=settings.aws_secret_access_key,
-        aws_session_token=settings.aws_session_token,
-        region_name=settings.region,
+        aws_access_key_id=config.aws_access_key_id,
+        aws_secret_access_key=config.aws_secret_access_key,
+        aws_session_token=config.aws_session_token,
+        region_name=config.region,
     )
 
 
 def get_transcribe_client():
     return boto3.client(
         "transcribe",
-        aws_access_key_id=settings.aws_access_key_id,
-        aws_secret_access_key=settings.aws_secret_access_key,
-        aws_session_token=settings.aws_session_token,
-        region_name=settings.region,
+        aws_access_key_id=config.aws_access_key_id,
+        aws_secret_access_key=config.aws_secret_access_key,
+        aws_session_token=config.aws_session_token,
+        region_name=config.region,
     )
 
 
@@ -44,7 +44,7 @@ def start_transcription_job(s3_file_uri, job_name, language_code="en-US"):
         Media={"MediaFileUri": s3_file_uri},
         MediaFormat=s3_file_uri.split(".")[-1],
         LanguageCode=language_code,
-        OutputBucketName=settings.s3_bucket_name,
+        OutputBucketName=config.s3_bucket_name,
         OutputKey=f"{job_name}.json",
     )
     return response
@@ -61,7 +61,7 @@ def fetch_transcription_result(job_name):
     if status["TranscriptionJob"]["TranscriptionJobStatus"] == "COMPLETED":
         s3 = get_s3_client()
         transcription_response = s3.get_object(
-            Bucket=settings.s3_bucket_name,
+            Bucket=config.s3_bucket_name,
             Key=f"{job_name}.json",
         )
         transcription_text = json.loads(
@@ -79,9 +79,7 @@ async def handle_transcription_upload(file: UploadFile):
         file_object.write(file.file.read())
 
     try:
-        s3_file_uri = upload_to_s3(
-            file_location, settings.s3_bucket_name, file.filename
-        )
+        s3_file_uri = upload_to_s3(file_location, config.s3_bucket_name, file.filename)
     except Exception as e:
         logger.error(f"Error uploading file to S3: {e}")
         raise
