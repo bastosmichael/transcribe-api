@@ -20,7 +20,7 @@ python-dotenv = "^1.2.2"
 black = "^26.5.1"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^9.0.3"
+pytest = "^9.1.0"
 httpx = "^0.28.1"
 pytest-asyncio = "^1.4.0"
 
