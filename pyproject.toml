@@ -9,7 +9,7 @@ license = "GPL-3.0"
 [tool.poetry.dependencies]
 python = "^3.11"
 fastapi = "^0.125.0"
-uvicorn = "^0.50.1"
+uvicorn = "^0.50.2"
 boto3 = "^1.43.40"
 pydantic = "^1.9.0"
 python-multipart = "^0.0.32"
