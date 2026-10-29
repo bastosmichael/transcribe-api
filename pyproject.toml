@@ -22,7 +22,7 @@ black = "^26.10.1"
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.3"
 httpx = "^0.28.1"
-pytest-asyncio = "^1.4.0"
+pytest-asyncio = "^1.4.1"
 
 [tool.poetry.scripts]
 transcribe = "transcribe.main:main"
